@@ -13,7 +13,7 @@ import UIKit
 class  AddNewLocation: UIViewController , UITextFieldDelegate{
     
   
-    @IBOutlet weak var PikerView: UIPickerView!
+    
     
     @IBOutlet weak var LinkTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!

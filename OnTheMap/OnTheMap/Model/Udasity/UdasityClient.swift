@@ -22,11 +22,24 @@ class func PostSession(username: String, password: String, completionHandler: @e
      request.httpBody = "{\"udacity\": {\"username\": \"account@domain.com\", \"password\": \"********\"}}".data(using: .utf8)
      let session = URLSession.shared
      let task = session.dataTask(with: request) { data, response, error in
-    if error != nil { // Handle error…
+    if error != nil {
+        completionHandler( nil , "Ther is an error")
         return
     }
-    let range = Range(5..<data!.count)
-    let newData = data?.subdata(in: range) /* subset response data! */
+    let range = (5..<data!.count)
+    let newData = data?.subdata(in: range)
+      
+        let jsonObject = try! JSONSerialization.jsonObject(with: newData!, options: [])
+        
+        let  loginDictionary = jsonObject as! [String: Any]
+        
+        //Get the unique key of the user
+        let accountDictionary = loginDictionary ["account"] as? [String : Any]
+        let uniqueKey = accountDictionary? ["key"] as? String ?? " "
+
+        //completion(uniqueKey , )
+        
+        
     print(String(data: newData!, encoding: .utf8)!)
     }
     
@@ -66,7 +79,7 @@ class func PostSession(username: String, password: String, completionHandler: @e
        
             }
        
-            let range = Range(5..<data!.count)
+            let range = (5..<data!.count)
         
             let newData = data?.subdata(in: range) /* subset response data! */
        

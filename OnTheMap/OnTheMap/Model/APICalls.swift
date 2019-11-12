@@ -23,46 +23,38 @@ class APICalls {
         
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
-                
-                
-                // TODO: Call the completion handler and send the error so it can be handled on the UI, also call "return" so the code next to this block won't be executed
-                
                 completion(false , "" , error)
             }
             
-            //Get the status code to check if the response is OK or not
+            
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
-                
-                completion(false , "" , error)
+            let statusCodeError = NSError(domain: NSURLErrorDomain, code: 0, userInfo: nil)
+            completion(false , statusCodeError.localizedDescription , error)
                 return
-                // TODO: Call the completion handler and send the error so it can be handled on the UI, also call "return" so the code next to this block won't be executed (you need to call return in let guard's else body anyway)
             }
             
-            if statusCode >= 200  && statusCode < 300 {
+           guard statusCode >= 200  && statusCode < 300 else {
+            completion(false , "There is an error check the server " , error )
+            return
+            }
+            
+            
+                let subData = data![5..<data!.count]
+            
+                print (String(data: subData, encoding: .utf8)!)
                 
-                //Skipping the first 5 characters
-                let range = Range(5..<data!.count)
-                let newData = data?.subdata(in: range) /* subset response data! */
-                
-                //Print the data to see it and know you'll parse it (this can be removed after you complete building the app)
-                print (String(data: newData!, encoding: .utf8)!)
-                
-                //TODO: Get an object based on the received data in JSON format
-                let jsonObject = try! JSONSerialization.jsonObject(with: data!, options: [])
-                
-                //TODO: Convert the object to a dictionary and call it loginDictionary
+            
+                let jsonObject = try! JSONSerialization.jsonObject(with: subData, options: [])
+            
                 let  loginDictionary = jsonObject as! [String: Any]
                 
                 //Get the unique key of the user
                 let accountDictionary = loginDictionary ["account"] as? [String : Any]
                 let uniqueKey = accountDictionary? ["key"] as? String ?? " "
                 completion (true, uniqueKey, nil)
-            } else {
-                //TODO: call the completion handler properly
                 completion(false , "" , error)
             }
-        }
-        //Start the task
+        
         task.resume()
     }
     
@@ -81,22 +73,16 @@ class APICalls {
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         
         let session = URLSession.shared
-        let task = session.dataTask(with: request) {data, response, error in
+        let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
-                // TODO: Call the completion handler and send the error so it can be handled on the UI, also call "return" so the code next to this block won't be executed
-                
-                completion( nil , error)
+            completion( nil , error)
             }
-            
-            //Print the data to see it and know you'll parse it (this can be removed after you complete building the app)
-            print (String(data: data!, encoding: .utf8)!)
+
             
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
-                // TODO: Call the completion handler and send the error so it can be handled on the UI, also call "return" so the code next to this block won't be executed (you need to call return in let guard's else body anyway)
-                
-                let statusCodeError = statusCode
-                
-                completion( nil , statusCodeError)
+               
+                let statusCodeError = NSError(domain: NSURLErrorDomain, code: 0, userInfo: nil)
+                completion( nil , statusCodeError.localizedDescription as? Error)
                 return
             }
             
@@ -106,17 +92,19 @@ class APICalls {
                 let jsonObject = try! JSONSerialization.jsonObject(with: data!, options: [])
                 
                 //TODO: Convert jsonObject to a dictionary
-                let jsonDict = jsonObject as! [String: Any]
+                let jsonDict = try! jsonObject as! [String: Any]
                 
                 //TODO: get the locations (associated with the key “results") and store it into a constant named resultArray
                 
-                let resultsArray = jsonDict[Results: Any]
+                let resultsArray = try! jsonDict["results"] as? [[String:Any]]
                 
                 //Check if the result array is nil using guard let, if it's return, otherwise continue
-                guard let array = resultsArray else {return}
+                
+                guard  resultsArray != nil else { return }
                 
                 //TODO: Convert the array above into a valid JSON Data object (so you can use that object to decode it into an array of student locations) and name it dataObject
-                let dataObject =  array
+                
+                let dataObject = try! JSONSerialization.data(withJSONObject: resultsArray, options: .prettyPrinted)
                 
                 //Use JSONDecoder to convert dataObject to an array of structs
                 let studentsLocations = try! JSONDecoder().decode([GetStudentLocation].self, from: dataObject)

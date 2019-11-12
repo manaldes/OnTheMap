@@ -10,18 +10,6 @@
 import UIKit
 import MapKit
 
-/**
- * This view controller demonstrates the objects involved in displaying pins on a map.
- *
- * The map is a MKMapView.
- * The pins are represented by MKPointAnnotation instances.
- *
- * The view controller conforms to the MKMapViewDelegate so that it can receive a method
- * invocation when a pin annotation is tapped. It accomplishes this using two delegate
- * methods: one to put a small "info" button on the right side of each pin, and one to
- * respond when the "info" button is tapped.
- */
-
 class MapViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var RefreshButton: UIBarButtonItem!
@@ -30,10 +18,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     // The map. See the setup in the Storyboard file. Note particularly that the view controller
     // is set up as the map view's delegate.
+    
     @IBOutlet weak var mapView: MKMapView!
     
-     let locations = hardCodedLocationData()
+    let locations = hardCodedLocationData()
      var annotations = [MKPointAnnotation]()
+    
+    var studentLocation:[GetStudentLocation]! {
+        return Global.shared.studentLocation
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,7 +68,23 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
     }
     
+    
+    @IBAction func Logout(_ sender: Any) {
+        //UdasityClient.DeleteSession(username: username, password: <#T##String#>, completionHandler: <#T##(PostSession?, String?) -> Void#>)
+            
+            //{ (error) in
+            //if let error = error {
+              //  self.alert(title: "error " , message: error.lacal)
+           // }
+        
+        //DispatchQueue.main.async {
+            self.dismiss(animated: true, completion: nil)
+        }
+
+    
+    
     override func viewWillAppear(_ animated: Bool) {
+ 
         APICalls.getAllLocations () {(studentsLocations, error) in
             DispatchQueue.main.async {
                 

@@ -22,14 +22,14 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ParseClient.studentLocations?.count ?? 0
+        return Global.shared.studentLocation?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell")
-        let student = ( ParseClient.studentLocations?[indexPath.row])!
-        cell.nameLabel.text = student.mapString
+        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell") as! TableViewCell
+        let student = ( Global.shared.studentLocation?[indexPath.row])!
+        cell.nameLabel.text = "\(student.firstName) \(student.lastName)"
         cell.mediaUrl.text = student.mediaURL
         return cell
         
@@ -37,7 +37,7 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let link = (ParseClient.studentLocations?[indexPath.row])?.mediaURL {
+        if let link = (Global.shared.studentLocation?[indexPath.row])?.mediaURL {
        
             let url = URL(string : link)
         
