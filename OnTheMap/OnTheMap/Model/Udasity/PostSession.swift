@@ -8,18 +8,19 @@
 
 import Foundation
 
-struct PostSession : Codable {
+struct postSession : Codable {
     
     var account : account
     var session : session
-    
+
+
     struct account : Codable {
-        var registered : Bool
-        var Key : Int
+        var registered : Bool?
+        var Key : String?
     }
     
     struct  session : Codable {
-        var id : Int
-        var expiration : String
+        var id : String?
+        var expiration : String?
     }
 }

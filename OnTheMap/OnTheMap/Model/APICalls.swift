@@ -11,56 +11,7 @@ import Foundation
 
 class APICalls {
     
-    
-    static func login (_ username : String!, _ password : String!, completion: @escaping (Bool, String, Error?)->()) {
-        
-        var request = URLRequest(url: URL(string: "https://onthemap-api.udacity.com/v1/session")!)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"udacity\": {\"username\": \"\(username!)\", \"password\": \"\(password!)\"}}".data(using: .utf8)
-        let session = URLSession.shared
-        
-        let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
-                completion(false , "" , error)
-            }
-            
-            
-            guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
-            let statusCodeError = NSError(domain: NSURLErrorDomain, code: 0, userInfo: nil)
-            completion(false , statusCodeError.localizedDescription , error)
-                return
-            }
-            
-           guard statusCode >= 200  && statusCode < 300 else {
-            completion(false , "There is an error check the server " , error )
-            return
-            }
-            
-            
-                let subData = data![5..<data!.count]
-            
-                print (String(data: subData, encoding: .utf8)!)
-                
-            
-                let jsonObject = try! JSONSerialization.jsonObject(with: subData, options: [])
-            
-                let  loginDictionary = jsonObject as! [String: Any]
-                
-                //Get the unique key of the user
-                let accountDictionary = loginDictionary ["account"] as? [String : Any]
-                let uniqueKey = accountDictionary? ["key"] as? String ?? " "
-                completion (true, uniqueKey, nil)
-                completion(false , "" , error)
-            }
-        
-        task.resume()
-    }
-    
-    
-    
-    
+  
     
     
     static func getAllLocations (completion: @escaping ([GetStudentLocation]?, Error?) -> ()) {
@@ -108,6 +59,8 @@ class APICalls {
                 
                 //Use JSONDecoder to convert dataObject to an array of structs
                 let studentsLocations = try! JSONDecoder().decode([GetStudentLocation].self, from: dataObject)
+               
+                Global.shared.studentLocation = studentsLocations
                 
                 completion (studentsLocations, nil)
             }

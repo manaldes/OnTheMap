@@ -10,173 +10,135 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController , MKMapViewDelegate {
     
     @IBOutlet weak var RefreshButton: UIBarButtonItem!
-    
     @IBOutlet weak var AddPinButton: UIBarButtonItem!
-
-    // The map. See the setup in the Storyboard file. Note particularly that the view controller
-    // is set up as the map view's delegate.
+    @IBOutlet weak var MapView: MKMapView!
     
-    @IBOutlet weak var mapView: MKMapView!
     
     let locations = hardCodedLocationData()
-     var annotations = [MKPointAnnotation]()
+    var annotations = [MKPointAnnotation]()
     
     var studentLocation:[GetStudentLocation]! {
+        
         return Global.shared.studentLocation
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.delegate = self
-        
-        // The "locations" array is loaded with the sample data below. We are using the dictionaries
-        // to create map annotations. This would be more stylish if the dictionaries were being
-        // used to create custom structs. Perhaps StudentLocation structs.
-        
-        for dictionary in locations {
-            
-            // Notice that the float values are being used to create CLLocationDegree values.
-            // This is a version of the Double type.
-            let lat = CLLocationDegrees(dictionary["latitude"] as! Double)
-            let long = CLLocationDegrees(dictionary["longitude"] as! Double)
-            
-            // The lat and long are used to create a CLLocationCoordinates2D instance.
-            let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            
-            let first = dictionary["firstName"] as! String
-            let last = dictionary["lastName"] as! String
-            let mediaURL = dictionary["mediaURL"] as! String
-            
-            // Here we create the annotation and set its coordiate, title, and subtitle properties
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            annotation.title = "\(first) \(last)"
-            annotation.subtitle = mediaURL
-            
-            // Finally we place the annotation in an array of annotations.
-            annotations.append(annotation)
-        }
-        
-        // When the array is complete, we add the annotations to the map.
-        self.mapView.addAnnotations(annotations)
-        
-        
-        
         
     }
     
-    
-    @IBAction func Logout(_ sender: Any) {
-        //UdasityClient.DeleteSession(username: username, password: <#T##String#>, completionHandler: <#T##(PostSession?, String?) -> Void#>)
-            
-            //{ (error) in
-            //if let error = error {
-              //  self.alert(title: "error " , message: error.lacal)
-           // }
-        
-        //DispatchQueue.main.async {
-            self.dismiss(animated: true, completion: nil)
-        }
-
-    
-    
+   
     override func viewWillAppear(_ animated: Bool) {
- 
-        APICalls.getAllLocations () {(studentsLocations, error) in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    let errorAlert = UIAlertController(title: "Erorr performing request", message: "There was an error performing your request", preferredStyle: .alert )
-                    
-                    errorAlert.addAction(UIAlertAction (title: "OK", style: .default, handler: { _ in
-                        return
-                    }))
-                    self.present(errorAlert, animated: true, completion: nil)
-                    return
-                }
-                
-                var annotations = [MKPointAnnotation] ()
-                
-                guard let locationsArray = studentsLocations else {
-                    let locationsErrorAlert = UIAlertController(title: "Erorr loading locations", message: "There was an error loading locations", preferredStyle: .alert )
-                    
-                    locationsErrorAlert.addAction(UIAlertAction (title: "OK", style: .default, handler: { _ in
-                        return
-                    }))
-                    self.present(locationsErrorAlert, animated: true, completion: nil)
-                    return
-                }
-                
-                //Loop through the array of structs and get locations data from it so they can be displayed on the map
-                for locationStruct in locationsArray {
-                    
-                    let long = CLLocationDegrees (locationStruct.longitude ?? 0)
-                    let lat = CLLocationDegrees (locationStruct.latitude ?? 0)
-                    
-                    let coords = CLLocationCoordinate2D (latitude: lat, longitude: long)
-                    
-                    //TODO: Get the media URL and call it mediaURL, if it's nil its value should be " ", for that use Nil-Coalescing Operator (??)
-                    
-                    let mediaURL = ""
-                    
-                    //TODO: Get the first name and call it first, if it's nil its value should be " ", for that use Nil-Coalescing Operator (??)
-                    
-                    let first =  ""
-                    //TODO: Get the last name and call it last, if it's nil its value should be " ", for that use Nil-Coalescing Operator (??)
-                    
-                    let last = ""
-                    // Here we create the annotation and set its coordiate, title, and subtitle properties
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = coords
-                    annotation.title = "\(first) \(last)"
-                    annotation.subtitle = mediaURL
-                    
-                    annotations.append (annotation)
-                }
-                self.mapView.addAnnotations (annotations)
+            
+          if ( studentLocation == nil ){
+            
+            reloadStudentLocation()
+            
+          } else {
+           DispatchQueue.main.async {
+               self.updateannotations()
+            }
             }
             
-        }//end getAllLocations
+    }//end willApear
+    
+    
+    @IBAction func refreshButton(_ sender: Any) {
+        
+     reloadStudentLocation()
+        
     }
     
-
     
-
-
-@IBAction func AddPinButton(_ sender: Any) {
     
-    // Create the alert controller
-    let alertController = UIAlertController(title: "", message: "You have already posted a student location . would you like to overwrite your current location ?", preferredStyle: .alert)
-    
-    // Create the actions
-    let okAction = UIAlertAction(title: "Overwrite", style: UIAlertAction.Style.default) {
-        UIAlertAction in
-        NSLog("OK Pressed")
-    }
-    let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
-        UIAlertAction in
-        NSLog("Cancel Pressed")
+    @IBAction func AddPinButton(_ sender: Any) {
+        
+    self.performSegue(withIdentifier: "AddSeque" , sender: nil)
     }
     
-    // Add the actions
-    alertController.addAction(okAction)
-    alertController.addAction(cancelAction)
+   
+    @IBAction func Logout(_ sender: Any) {
+       
+        UdasityClient.DeleteSession { (error) in
+            
+            guard error != nil else {
+                
+                Global.showeAlert(viewController: self, title:  "There is an error to logout  ", message: "")
+                
+                return
+            }  
+            DispatchQueue.main.async {
+                self.dismiss(animated: true, completion: nil)
+                
+            }
+        }
+        
+    } // end logout
+        
+        
+        
+        func updateannotations () {
+            
+            var annotations = [MKPointAnnotation]()
+            
+            
+            let locationsArray = studentLocation
+                
+                /*else {
+                
+                 Global.showeAlert(viewController: self, title: "Erorr loading locations", message: "iThere was an error loading locations")
+                return
+            } */
+            
+            guard locationsArray != nil else {
+                Global.showeAlert(viewController: self, title: "locationArray is empty ", message: "" )
+                return
+            }
+            
+            for locationsArray in studentLocation {
+                
+                let lat = CLLocationDegrees(locationsArray.latitude ?? 0)
+                let long = CLLocationDegrees( locationsArray.longitude ?? 0)
+                let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                
+                let first = locationsArray.firstName ?? ""
+                let last = locationsArray.lastName ?? ""
+                let media = locationsArray.mediaURL ?? ""
+                
+                let annotation = MKPointAnnotation()
+                
+                annotation.coordinate = coordinate
+                annotation.title = "\(first) \(last)"
+                annotation.subtitle = media
+                
+                annotations.append (annotation)
+                
+            }
+            self.MapView.addAnnotations (annotations)
+    }
     
-    // Present the controller
-    self.present(alertController, animated: true, completion: nil)
- 
-}
+    
+        func reloadStudentLocation () {
+            
+            ParseClient.getLocation() { ( error ) in
+                
+                guard error != nil else {
+                    print(" There is an error ")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.updateannotations()
+                }
+            }
+            
+
 
 }
     // MARK: - MKMapViewDelegate
-    
-    // Here we create a view with a "right callout accessory view". You might choose to look into other
-    // decoration alternatives. Notice the similarity between this method and the cellForRowAtIndexPath
-    // method in TableViewDataSource.
-    
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
@@ -187,8 +149,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            //pinView!.pinColor = .red
+            pinView?.pinTintColor = .red
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            
         }
         else {
             pinView!.annotation = annotation
@@ -197,25 +160,16 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         return pinView
     }
     
-    
-    // This delegate method is implemented to respond to taps. It opens the system browser
-    // to the URL specified in the annotationViews subtitle property.
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {
+                
                 app.open(URL(string: toOpen)!, options: [:], completionHandler: nil)
             }
         }
     }
-     func mapView(mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-   
-            if control == annotationView.rightCalloutAccessoryView {
-                let app = UIApplication.shared
-                app.open(NSURL(string: (annotationView.annotation?.subtitle!)!)! as URL)
-            }
-      }
-    
 
- 
-
+}

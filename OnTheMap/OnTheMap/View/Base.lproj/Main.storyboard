@@ -32,11 +32,15 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="MnP-cK-9IM"/>
                                     <barButtonItem image="icon_pin" style="plain" id="FR4-pz-xw6">
                                         <connections>
-                                            <action selector="AddPinButton:" destination="rAf-00-VBO" id="O2d-bh-VII"/>
-                                            <segue destination="U8h-PW-ht2" kind="show" id="OPm-JC-GUB"/>
+                                            <action selector="AddPinButton:" destination="rAf-00-VBO" id="8RP-bs-7tm"/>
+                                            <segue destination="U8h-PW-ht2" kind="show" identifier="AddSeque" id="OPm-JC-GUB"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="icon_refresh" id="wzj-Pr-yQo"/>
+                                    <barButtonItem image="icon_refresh" id="wzj-Pr-yQo">
+                                        <connections>
+                                            <action selector="refreshButton:" destination="rAf-00-VBO" id="D7e-WD-X8m"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="On The Map" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ysp-ev-2YA">
@@ -62,7 +66,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" selectedImage="icon_mapview-deselected" id="H0n-Ac-a3L"/>
                     <connections>
-                        <outlet property="AddPinButton" destination="FR4-pz-xw6" id="GbJ-vD-1mF"/>
+                        <outlet property="AddPinButton" destination="FR4-pz-xw6" id="YQ3-d0-Abz"/>
+                        <outlet property="MapView" destination="EAa-Qb-xqA" id="nKB-Rc-KFd"/>
                         <outlet property="RefreshButton" destination="wzj-Pr-yQo" id="baW-vf-irc"/>
                         <outlet property="mapView" destination="EAa-Qb-xqA" id="uHy-Iq-RBq"/>
                     </connections>
@@ -85,7 +90,7 @@
                                 <state key="normal" title="Find on the map"/>
                                 <connections>
                                     <action selector="findLocationButton:" destination="Tez-G7-JiS" eventType="touchUpInside" id="3uW-1p-a59"/>
-                                    <segue destination="YGh-NS-bpO" kind="show" id="gfS-jm-n4f"/>
+                                    <segue destination="YGh-NS-bpO" kind="show" identifier="showLocation" id="gfS-jm-n4f"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="He7-aq-ckF">
@@ -148,6 +153,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="fdP-hz-RO7"/>
                     <connections>
+                        <outlet property="findLocation" destination="baB-HG-bTh" id="pk2-uk-D2K"/>
                         <outlet property="locationTextField" destination="DNo-y3-HB6" id="zdl-aP-pYH"/>
                     </connections>
                 </viewController>
@@ -155,10 +161,10 @@
             </objects>
             <point key="canvasLocation" x="2409" y="-180"/>
         </scene>
-        <!--Add New Location-->
+        <!--Map Location-->
         <scene sceneID="kbL-b1-0q7">
             <objects>
-                <viewController id="YGh-NS-bpO" customClass="AddNewLocation" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="YGh-NS-bpO" customClass="MapLocation" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6wJ-VP-RiG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -189,7 +195,7 @@
                                 <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Submit"/>
                                 <connections>
-                                    <action selector="submitButton:" destination="YGh-NS-bpO" eventType="touchUpInside" id="e3p-Is-v0C"/>
+                                    <action selector="submitButton:" destination="YGh-NS-bpO" eventType="touchUpInside" id="QEy-gb-37q"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -198,6 +204,8 @@
                     </view>
                     <connections>
                         <outlet property="LinkTextField" destination="1lu-YD-bnn" id="5Xy-xi-Tyx"/>
+                        <outlet property="MapView" destination="XLB-Ac-IlQ" id="rQn-VP-Bkf"/>
+                        <outlet property="urlField" destination="1lu-YD-bnn" id="Cc8-4f-0Q2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qSU-Bl-Ofh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -219,40 +227,52 @@
                                     <rect key="frame" x="0.0" y="0.0" width="394" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <items>
-                                        <barButtonItem title="Logout" id="7Ba-sF-B3T"/>
+                                        <barButtonItem title="Logout" id="7Ba-sF-B3T">
+                                            <connections>
+                                                <action selector="Logout:" destination="0aA-Nf-HS1" id="KjP-lD-RQV"/>
+                                            </connections>
+                                        </barButtonItem>
                                         <barButtonItem style="plain" systemItem="flexibleSpace" id="sbf-ya-YFt"/>
-                                        <barButtonItem image="icon_pin" style="plain" id="dY2-yI-8O1"/>
-                                        <barButtonItem systemItem="refresh" id="SGb-ht-alC"/>
+                                        <barButtonItem image="icon_pin" style="plain" id="dY2-yI-8O1">
+                                            <connections>
+                                                <action selector="AddPinButton:" destination="0aA-Nf-HS1" id="cGn-6u-NnG"/>
+                                                <segue destination="U8h-PW-ht2" kind="show" identifier="AddSeque2" id="KVH-WM-rB1"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem systemItem="refresh" id="SGb-ht-alC">
+                                            <connections>
+                                                <action selector="refreshButton:" destination="0aA-Nf-HS1" id="PEX-fu-umA"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </items>
                                 </toolbar>
                             </tableView>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="userCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" translatesAutoresizingMaskIntoConstraints="NO" id="IQU-XE-lqh" customClass="TableViewCell" customModule="OnTheMap" customModuleProvider="target">
-                                <rect key="frame" x="10" y="426" width="394" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="userCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" textLabel="dvC-n8-YcU" detailTextLabel="rej-UB-Sgn" imageView="RYl-sS-Om0" style="IBUITableViewCellStyleSubtitle" translatesAutoresizingMaskIntoConstraints="NO" id="IQU-XE-lqh" customClass="TableViewCell" customModule="OnTheMap" customModuleProvider="target">
+                                <rect key="frame" x="10" y="426" width="394" height="56"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IQU-XE-lqh" id="hBM-rc-X52">
-                                    <rect key="frame" x="0.0" y="0.0" width="394" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="394" height="55.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tN5-nF-Fr8">
-                                            <rect key="frame" x="38" y="11" width="42" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dvC-n8-YcU">
+                                            <rect key="frame" x="59" y="10" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Dc-K6-ScS">
-                                            <rect key="frame" x="210" y="11" width="42" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" image="icon_pin" id="RYl-sS-Om0">
+                                            <rect key="frame" x="20" y="15" width="24" height="24"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </imageView>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rej-UB-Sgn">
+                                            <rect key="frame" x="59" y="31.5" width="33" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="mediaLabel" destination="2Dc-K6-ScS" id="HZq-TV-IfF"/>
-                                    <outlet property="mediaUrl" destination="2Dc-K6-ScS" id="RON-7H-1Fp"/>
-                                    <outlet property="nameLabel" destination="tN5-nF-Fr8" id="cXf-BK-N2A"/>
-                                </connections>
                             </tableViewCell>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -396,6 +416,7 @@
         <image name="logo-u" width="62" height="62"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="OPm-JC-GUB"/>
         <segue reference="isS-Ya-IIr"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -11,7 +11,7 @@ import Foundation
 
 struct PutStudentLocation :Codable {
   
-    var updatedAt : String
+    var updatedAt : String?
 
 }
 

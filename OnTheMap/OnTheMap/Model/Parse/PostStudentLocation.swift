@@ -10,6 +10,6 @@ import Foundation
 
 struct PostStudentLocation : Codable {
     
-    var createdAt : String
-    var objectId : String
+    var createdAt : String?
+    var objectId : String?
 }

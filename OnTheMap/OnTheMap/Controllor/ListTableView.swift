@@ -10,9 +10,17 @@ import Foundation
 import UIKit
 
 class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSource {
+   
+    
     
     
     @IBOutlet weak var tableView : UITableView!
+
+    
+    
+    var studentLocation:[GetStudentLocation]! {
+        return Global.shared.studentLocation
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +28,56 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
         tableView.dataSource = self
         
     }
+    
+    
+    
+    
+    @IBAction func refreshButton(_ sender: Any) {
+      
+    }
+    
+    
+    @IBAction func AddPinButton(_ sender: Any) {
+    self.performSegue(withIdentifier: "AddSeque2", sender: nil)
+        
+    }
+    
+
+    
+    @IBAction func Logout(_ sender: Any) {
+       
+        UdasityClient.DeleteSession { (error) in
+            
+            guard error != nil else {
+                
+                Global.showeAlert(viewController: self, title: "Ther is an error to logout ", message: "")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.dismiss(animated: true, completion: nil)
+                
+            }
+            }
+            
+        }  // end logout
+        
+    func reloadStudentLocation () {
+        
+        
+        ParseClient.getLocation() { ( error ) in
+            
+            guard error != nil else {
+                print(" There is an error ")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+    }
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Global.shared.studentLocation?.count ?? 0
@@ -29,6 +87,7 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
        
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell") as! TableViewCell
         let student = ( Global.shared.studentLocation?[indexPath.row])!
+        
         cell.nameLabel.text = "\(student.firstName) \(student.lastName)"
         cell.mediaUrl.text = student.mediaURL
         return cell
@@ -48,5 +107,7 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
         
     }
     
-    
 }
+    
+
+
