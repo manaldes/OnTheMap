@@ -12,27 +12,29 @@ import MapKit
 
 class  AddNewLocation: UIViewController , UITextFieldDelegate{
     
-  
-    
-    
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var findLocation: UIButton!
+
     
-    var latitude : Double?
-    var longitude : Double?
+    var latitude : Double = 0.0
+    var longitude : Double = 0.0
+    
+    var coordinate: CLLocationCoordinate2D!
+    
+    var location = ""
     
     override func viewWillAppear(_ animated: Bool) {
        super.viewWillAppear(animated)
-        
-        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         locationTextField.delegate = self
         
-        findLocation.layer.cornerRadius = 5
+        findLocation.layer.cornerRadius = 10
+        
         
     }
     
@@ -41,31 +43,54 @@ class  AddNewLocation: UIViewController , UITextFieldDelegate{
         
     }
     
-    @IBAction func submitButton(_ sender: Any) {
-        
-        /*ParseClient.postLocation (student) { (errorMessage) in
-            
-            if ( error != nil ){
-                
-            } else {
-          */
-       // DispatchQueue.main.async {
-            //newUserInformation(newStudent)
-        //}
-      //      }
-    //}
-    }
-    
     @IBAction func findLocationButton(_ sender: Any) {
-    
-        
-        if ( locationTextField.text == nil) {
-           
-            Global.showeAlert(viewController: self, title: "Location Text Field Empty", message: "You must enter your location")
+
+        if locationTextField.text == "" {
             
-        } else {
+            DispatchQueue.main.async {
+                Global.showeAlert(viewController: self, title: "Location Text Field Empty", message: "You must enter your location")
+                return
+            }
+          
             
-            let searchRequst = MKLocalSearch.Request()
+       } else {
+            
+            DispatchQueue.main.async {
+            
+            
+                self.location = self.locationTextField.text!
+            
+                self.gcodeMapString (self.location) { (coordinate , error ) in
+                
+                guard error == nil else {
+                    Global.showeAlert(viewController: self, title: "Error " , message: "can not be indicate ")
+                    return
+                }
+                
+                    self.latitude = coordinate!.latitude
+                    self.longitude = coordinate!.longitude
+                    
+               let studentLocation = GetStudentLocation.init(createdAt: "",
+                                                             firstName: nil ,
+                                                             lastName: nil ,
+                                                             latitude: self.latitude,
+                                                             longitude: self.longitude ,
+                                                             mapString: self.location ,
+                                                             mediaURL: "" ,
+                                                             objectId: "" ,
+                                                             uniqueKey: "" ,
+                                                             updatedAt: "" )
+                
+                
+            
+                 
+                self.coordinate = coordinate
+                self.performSegue(withIdentifier: "showLocation", sender: studentLocation )
+                }
+            }
+            
+            
+            /* let searchRequst = MKLocalSearch.Request()
             searchRequst.naturalLanguageQuery = locationTextField.text
             let search = MKLocalSearch(request: searchRequst)
             search.start{ ( response , error ) in
@@ -86,56 +111,56 @@ class  AddNewLocation: UIViewController , UITextFieldDelegate{
                 
                 
             }
-            
+           */
         } // end else
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showLocation" {
-            let vc = segue.destination as! MapLocation
+    func gcodeMapString ( _ mapString : String , completion: @escaping (_ coordinate : CLLocationCoordinate2D? , _ errorMessage: Error? ) -> Void) {
+        
+        CLGeocoder().geocodeAddressString( mapString) { ( locations , error) in
             
-            vc.mapString = locationTextField.text!
-           
-        }
-    }
-    
-    func newUserInformation (_ student: GetStudentLocation) {
-        
-        var newStudent = GetStudentLocation()
-        
-        newStudent.uniqueKey = student.uniqueKey
-        newStudent.firstName = student.firstName
-        newStudent.lastName = student.lastName
-        newStudent.mapString = student.mapString
-        newStudent.mediaURL = student.mediaURL
-        newStudent.longitude = student.longitude
-        newStudent.latitude = student.latitude
-        
-        ParseClient.postLocation(newStudent) { (errorMessage) in
-            
-            if errorMessage == nil {
-                DispatchQueue.main.async {
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    print(errorMessage)
+            DispatchQueue.main.async {
+                
+                if error == nil {
+                    if let placemark = locations?[0] {
+                        let location = placemark.location!
+                        completion(location.coordinate , nil )
+                        return
+                    }
+                    
+                } else {
+                    
+                    Global.showeAlert(viewController: self, title: "Location can not be indicate ", message: "" )
+                    completion( nil , error)
                 }
             }
+        }
         
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        print("prepare seque" )
+        
+            if segue.identifier == "showLocation" {
+               
+                let vc = segue.destination as! MapLocation
+                vc.mapString = self.locationTextField.text!
+                vc.coordinate = self.coordinate
+                vc.longitude = self.longitude
+                vc.latitude = self.latitude
+                
+        }
     }
-    
-    
+  
+ 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
        locationTextField.endEditing(true)
-        locationTextField.resignFirstResponder()
+      locationTextField.resignFirstResponder()
         return true
     }
-    
-   
-
 
 }

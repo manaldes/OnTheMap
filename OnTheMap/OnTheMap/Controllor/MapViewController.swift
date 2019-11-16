@@ -20,14 +20,11 @@ class MapViewController: UIViewController , MKMapViewDelegate {
     let locations = hardCodedLocationData()
     var annotations = [MKPointAnnotation]()
     
-    var studentLocation:[GetStudentLocation]! {
-        
-        return Global.shared.studentLocation
-    }
+    var studentLocation:[GetStudentLocation]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        MapView.delegate = self
     }
     
    
@@ -38,6 +35,7 @@ class MapViewController: UIViewController , MKMapViewDelegate {
             reloadStudentLocation()
             
           } else {
+            
            DispatchQueue.main.async {
                self.updateannotations()
             }
@@ -47,9 +45,7 @@ class MapViewController: UIViewController , MKMapViewDelegate {
     
     
     @IBAction func refreshButton(_ sender: Any) {
-        
-     reloadStudentLocation()
-        
+       reloadStudentLocation()
     }
     
     
@@ -63,17 +59,16 @@ class MapViewController: UIViewController , MKMapViewDelegate {
     @IBAction func Logout(_ sender: Any) {
        
         UdasityClient.DeleteSession { (error) in
-            
-            guard error != nil else {
-                
+        
+            guard error == nil else {
                 Global.showeAlert(viewController: self, title:  "There is an error to logout  ", message: "")
-                
                 return
-            }  
+            }
+          
             DispatchQueue.main.async {
                 self.dismiss(animated: true, completion: nil)
                 
-            }
+                } 
         }
         
     } // end logout
@@ -84,17 +79,14 @@ class MapViewController: UIViewController , MKMapViewDelegate {
             
             var annotations = [MKPointAnnotation]()
             
-            
             let locationsArray = studentLocation
-                
-                /*else {
-                
-                 Global.showeAlert(viewController: self, title: "Erorr loading locations", message: "iThere was an error loading locations")
-                return
-            } */
-            
+        
+            GetStudentLocation.lastFetched = locationsArray
+
+
             guard locationsArray != nil else {
-                Global.showeAlert(viewController: self, title: "locationArray is empty ", message: "" )
+                
+                Global.showeAlert(viewController: self, title: " Location array is empty ", message: "" )
                 return
             }
             
@@ -118,26 +110,29 @@ class MapViewController: UIViewController , MKMapViewDelegate {
                 
             }
             self.MapView.addAnnotations (annotations)
-    }
+         }
+    
     
     
         func reloadStudentLocation () {
             
-            ParseClient.getLocation() { ( error ) in
+            ParseClient.getLocations { ( Location , error ) in
                 
-                guard error != nil else {
-                    print(" There is an error ")
+                guard error == nil else {
+                    print(" There is an error to load location  ")
                     return
                 }
                 
                 DispatchQueue.main.async {
+                    self.studentLocation = Location
+                    GetStudentLocation.lastFetched = Location
                     self.updateannotations()
                 }
             }
-            
-
-
-}
+         }
+    
+    
+    
     // MARK: - MKMapViewDelegate
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

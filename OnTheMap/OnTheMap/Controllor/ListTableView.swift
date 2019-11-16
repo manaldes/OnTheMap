@@ -16,36 +16,33 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
     
     @IBOutlet weak var tableView : UITableView!
 
+    var result = [GetStudentLocation]()
     
-    
-    var studentLocation:[GetStudentLocation]! {
-        return Global.shared.studentLocation
-    }
+    //var studentLocation:[GetStudentLocation]! {
+     //   return Global.shared.studentLocation
+    //}
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         
+        result = GetStudentLocation.lastFetched ?? []
+        
+        print("enter table ")
     }
     
-    
-    
-    
+  
     @IBAction func refreshButton(_ sender: Any) {
-      
+      reloadStudentLocation()
     }
     
     
     @IBAction func AddPinButton(_ sender: Any) {
-    self.performSegue(withIdentifier: "AddSeque2", sender: nil)
-        
+        self.performSegue(withIdentifier: "AddSeque2", sender: nil)
     }
-    
-
-    
+ 
     @IBAction func Logout(_ sender: Any) {
-       
         UdasityClient.DeleteSession { (error) in
             
             guard error != nil else {
@@ -61,35 +58,46 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
             }
             
         }  // end logout
-        
+    
+    
+    
     func reloadStudentLocation () {
-        
-        
-        ParseClient.getLocation() { ( error ) in
+     
+        ParseClient.getLocations  { (  result , error ) in
             
-            guard error != nil else {
+            guard error == nil else {
                 print(" There is an error ")
                 return
             }
-            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-    }
+         }
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Global.shared.studentLocation?.count ?? 0
+        return result.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell") as! TableViewCell
-        let student = ( Global.shared.studentLocation?[indexPath.row])!
+        let student = self.result[(indexPath).row]
+    
         
-        cell.nameLabel.text = "\(student.firstName) \(student.lastName)"
+        let firstName = result[indexPath.row].firstName
+            
+        
+        //let firstName = (GetStudentLocation.lastFetched?[indexPath.row])?.firstName
+        let lastName = result[indexPath.row].lastName
+        
+        cell.nameLabel.text = "\(firstName) \(lastName)"
+        
         cell.mediaUrl.text = student.mediaURL
+        
+         
+            
         return cell
         
     }

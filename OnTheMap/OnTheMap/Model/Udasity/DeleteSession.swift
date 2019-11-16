@@ -8,12 +8,10 @@
 
 import Foundation
 
-struct deleteSession : Codable {
-   
-    var session : session
-    
-    struct  session : Codable {
-        var id : Int?
+
+
+    struct  Session : Codable {
+        var id : String?
         var expiration : String?
     }
-}
+

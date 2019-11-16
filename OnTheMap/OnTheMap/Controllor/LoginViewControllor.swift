@@ -29,8 +29,9 @@ class loginViewControllor : UIViewController , MKMapViewDelegate   {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        EmailField.text = ""
-        PasswordField.text = ""
+        EmailField.delegate = self
+        PasswordField.delegate = self
+        
         LoginButton.layer.cornerRadius = 6
         
    
@@ -65,10 +66,9 @@ class loginViewControllor : UIViewController , MKMapViewDelegate   {
                     self.updateUI(processing: false)
                     
                 } else {
-                    
-                    //self.performSegue(withIdentifier: "loginSuccessSegueID", sender: self)
-                    
+                                    
                     self.updateUI(processing: false)
+                   
                     DispatchQueue.main.async {
                       
                         self.EmailField.text = ""
@@ -78,8 +78,6 @@ class loginViewControllor : UIViewController , MKMapViewDelegate   {
                         self.performSegue(withIdentifier: "loginSuccessSegueID", sender: self)
                         
                     }
-
-                    print ("the key is \(UdasityClient.uniqueKey)")
                 }
             }
         }
@@ -97,7 +95,45 @@ class loginViewControllor : UIViewController , MKMapViewDelegate   {
         }
     }
     
-   
+    
+    
+}
+
+
+extension loginViewControllor : UITextFieldDelegate {
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        EmailField.endEditing(true)
+        PasswordField.endEditing(true)
+        EmailField.resignFirstResponder()
+        PasswordField.resignFirstResponder()
+        return true
     }
     
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if keyboardHeight(notification) > 400 {
+            view.frame.origin.y = -keyboardHeight(notification)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        view.frame.origin.y = 0
+    }
+    
+    func keyboardHeight(_ notification: Notification) -> CGFloat {
+        let userInfo = (notification as NSNotification).userInfo
+        let keyboardSize = userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.cgRectValue.height
+    }
+    
+    func resignIfFirstResponder(_ textField: UITextField) {
+        if textField.isFirstResponder {
+            textField.resignFirstResponder()
+        }
+    
+    
+    }
+}
     

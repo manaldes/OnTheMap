@@ -11,9 +11,9 @@ import Foundation
 
 class UdasityClient {
 
-    static var uniqueKey  = ""
+    static var uniqueKey :String?
     static var registred : Bool = true
-    
+
     
     static var firstname = ""
     static var lastname = ""
@@ -77,6 +77,9 @@ class UdasityClient {
         
             self.uniqueKey = accountID ?? ""
             
+            
+            // self.userInfo.key =  accountID
+                
             completionHandler(nil)
             
             print("The login is done successfuly!")
@@ -88,29 +91,6 @@ class UdasityClient {
             print("catch error ")
             return
         }
-       /*guard let loginDictionary = jsonObject as? [String: Any] else {
-            
-           completionHandler("We could'nt cast json object to swift dict ")
-            return
-        }
-        
-        //Get the unique key of the user
-        
-        let accountDictionary = loginDictionary ["account"] as? [String : Any]
-        
-        uniqueKey = accountDictionary? ["key"] as? String ?? " "
-        registred = accountDictionary? ["registered"] as? Bool ?? true
-        
-        
-        
-        let resulsData = try! JSONSerialization.data(withJSONObject: uniqueKey , options: .prettyPrinted)
-        let studentLocation = try! JSONDecoder().decode([GetStudentLocation].self , from: resulsData)
- 
-        
-        Global.shared.studentLocation = studentLocation
- 
- */
-       
         
         }
         
@@ -146,38 +126,29 @@ class UdasityClient {
         let task = session.dataTask(with: request) { data, response, error in
      
             if error != nil {
+                print(" error task ")
                 completionHandler(error?.localizedDescription )
             return
        
             }
        
-            let range = (5..<data!.count)
-        
-            let newData = data?.subdata(in: range) /* subset response data! */
-       
-            print(String(data: newData!, encoding: .utf8)!)
-            
-            /* let jsonObject = try! JSONSerialization.jsonObject(with: newData!, options: [])
-            
-            guard let loginDictionary = jsonObject as? [String: Any] else {
-                completionHandler(error?.localizedDescription)
+            guard let data = data else {
+                print("there is no data")
                 return
             }
             
-            //Get the unique key of the user
+            let newData = data[5..<data.count]
+       
+            print(String(data: newData, encoding: .utf8)!)
             
-            let accountDictionary = loginDictionary ["account"] as? [String : Any]
-            
-            let resulsData = try! JSONSerialization.data(withJSONObject: accountDictionary! , options: .prettyPrinted)
- */
             do {
-                let decoder = JSONDecoder()
                 
-                let studentLocation = try decoder.decode( deleteSession.self , from: newData!)
+                let decoder = JSONDecoder()
+                let studentLocation = try decoder.decode( Session.self , from: newData)
                 
                 completionHandler (nil)
+           
             } catch {
-                
                 print("catch error")
                 completionHandler(error.localizedDescription)
                 return

@@ -26,7 +26,6 @@
 		0EF1B80E2377F1DD00500D7B /* PostStudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B80D2377F1DD00500D7B /* PostStudentLocation.swift */; };
 		0EF1B8102377F27800500D7B /* PostSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B80F2377F27800500D7B /* PostSession.swift */; };
 		0EF1B8122377F35700500D7B /* DeleteSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B8112377F35700500D7B /* DeleteSession.swift */; };
-		0EF1B8142378361400500D7B /* APICalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B8132378361400500D7B /* APICalls.swift */; };
 		0EF1B81623783B7300500D7B /* AddNewLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B81523783B7300500D7B /* AddNewLocation.swift */; };
 		0EF1B8182378726A00500D7B /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF1B8172378726A00500D7B /* TableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -56,10 +55,10 @@
 		0E2312D9237CC14C00794B16 /* MapLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLocation.swift; sourceTree = "<group>"; };
 		0E24B3D4237A736F009DE1D9 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		0E713EED237012BB004546B2 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0E713EF0237012BB004546B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0E713EF0237012BB004546B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Controllor/AppDelegate.swift; sourceTree = "<group>"; };
 		0E713EF2237012BB004546B2 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0E713EF5237012BB004546B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		0E713EF7237012BD004546B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0E713EF7237012BD004546B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = View/Assets.xcassets; sourceTree = "<group>"; };
 		0E713EFA237012BD004546B2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E713EFC237012BD004546B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E713F01237012BD004546B2 /* OnTheMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnTheMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,7 +73,6 @@
 		0EF1B80D2377F1DD00500D7B /* PostStudentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostStudentLocation.swift; sourceTree = "<group>"; };
 		0EF1B80F2377F27800500D7B /* PostSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSession.swift; sourceTree = "<group>"; };
 		0EF1B8112377F35700500D7B /* DeleteSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSession.swift; sourceTree = "<group>"; };
-		0EF1B8132378361400500D7B /* APICalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICalls.swift; sourceTree = "<group>"; };
 		0EF1B81523783B7300500D7B /* AddNewLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewLocation.swift; sourceTree = "<group>"; };
 		0EF1B8172378726A00500D7B /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,7 +105,6 @@
 		0E0B6C0D23728E6900E73384 /* Controllor */ = {
 			isa = PBXGroup;
 			children = (
-				0E713EF0237012BB004546B2 /* AppDelegate.swift */,
 				0E0B6C15237290AC00E73384 /* LoginViewControllor.swift */,
 				0E713EF2237012BB004546B2 /* MapViewController.swift */,
 				0E0B6C1C23729E9100E73384 /* ListTableView.swift */,
@@ -122,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				0E24B3D4237A736F009DE1D9 /* Global.swift */,
-				0EF1B8132378361400500D7B /* APICalls.swift */,
 				0E8859BB23746365008DD2B2 /* Parse */,
 				0E8859BA23746359008DD2B2 /* Udasity */,
 				0E0B6C0F23728EC200E73384 /* hardCodedLocationData.swift */,
@@ -135,7 +131,6 @@
 			children = (
 				0E713EF4237012BB004546B2 /* Main.storyboard */,
 				0E713EF9237012BD004546B2 /* LaunchScreen.storyboard */,
-				0E713EF7237012BD004546B2 /* Assets.xcassets */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -163,10 +158,12 @@
 		0E713EEF237012BB004546B2 /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
-				0E0B6C0E23728E8900E73384 /* Model */,
 				0E0B6C0D23728E6900E73384 /* Controllor */,
+				0E0B6C0E23728E8900E73384 /* Model */,
 				0E0B6C1B23729B3900E73384 /* View */,
 				0E713EFC237012BD004546B2 /* Info.plist */,
+				0E713EF7237012BD004546B2 /* Assets.xcassets */,
+				0E713EF0237012BB004546B2 /* AppDelegate.swift */,
 			);
 			path = OnTheMap;
 			sourceTree = "<group>";
@@ -351,7 +348,6 @@
 				0E2312DA237CC14C00794B16 /* MapLocation.swift in Sources */,
 				0EF1B8122377F35700500D7B /* DeleteSession.swift in Sources */,
 				0E24B3D5237A736F009DE1D9 /* Global.swift in Sources */,
-				0EF1B8142378361400500D7B /* APICalls.swift in Sources */,
 				0E0B6C16237290AC00E73384 /* LoginViewControllor.swift in Sources */,
 				0EF1B81623783B7300500D7B /* AddNewLocation.swift in Sources */,
 				0E0B6C1D23729E9100E73384 /* ListTableView.swift in Sources */,

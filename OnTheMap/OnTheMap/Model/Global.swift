@@ -16,6 +16,8 @@ class Global   {
     
     var studentLocation : [GetStudentLocation]?
     
+     var Location: GetStudentLocation?
+    
     
     static func showeAlert(viewController: UIViewController, title: String, message: String) {
         DispatchQueue.main.async {
