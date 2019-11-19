@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSource {
+class ListTableView : UIViewController {
    
     
     
@@ -17,11 +17,7 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
     @IBOutlet weak var tableView : UITableView!
 
     var result = [GetStudentLocation]()
-    
-    //var studentLocation:[GetStudentLocation]! {
-     //   return Global.shared.studentLocation
-    //}
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -74,7 +70,14 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
             }
          }
     }
+  
     
+}
+
+
+
+
+extension ListTableView : UITableViewDelegate , UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return result.count
@@ -87,9 +90,6 @@ class ListTableView : UIViewController , UITableViewDelegate , UITableViewDataSo
     
         
         let firstName = result[indexPath.row].firstName
-            
-        
-        //let firstName = (GetStudentLocation.lastFetched?[indexPath.row])?.firstName
         let lastName = result[indexPath.row].lastName
         
         cell.nameLabel.text = "\(firstName) \(lastName)"

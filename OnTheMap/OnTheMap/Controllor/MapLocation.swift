@@ -82,7 +82,7 @@ class MapLocation : UIViewController {
             ParseClient.postLocation ( self.location! ) { (error) in
             
             if error != nil {
-                Global.showeAlert(viewController: self, title: "Error ensert student ", message: "" )
+                Global.showeAlert(viewController: self, title: "Error insert student ", message: "" )
             
                 return
             } else {
@@ -103,6 +103,9 @@ class MapLocation : UIViewController {
             
         }
     }
+    
+    
+    
     
     
 

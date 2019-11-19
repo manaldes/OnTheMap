@@ -30,7 +30,7 @@ class MapViewController: UIViewController , MKMapViewDelegate {
    
     override func viewWillAppear(_ animated: Bool) {
             
-          if ( studentLocation == nil ){
+          if studentLocation == nil {
             
             reloadStudentLocation()
             
@@ -42,6 +42,8 @@ class MapViewController: UIViewController , MKMapViewDelegate {
             }
             
     }//end willApear
+    
+    
     
     
     @IBAction func refreshButton(_ sender: Any) {
@@ -56,6 +58,8 @@ class MapViewController: UIViewController , MKMapViewDelegate {
     }
     
    
+    
+
     @IBAction func Logout(_ sender: Any) {
        
         UdasityClient.DeleteSession { (error) in
@@ -155,7 +159,8 @@ class MapViewController: UIViewController , MKMapViewDelegate {
         return pinView
     }
     
-func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         
         if control == view.rightCalloutAccessoryView {

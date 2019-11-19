@@ -108,8 +108,19 @@ extension loginViewControllor : UITextFieldDelegate {
         PasswordField.endEditing(true)
         EmailField.resignFirstResponder()
         PasswordField.resignFirstResponder()
+        
+        
+        if (textField == self.EmailField) {
+            self.EmailField.becomeFirstResponder()
+        } else if (textField == self.PasswordField) {
+            self.PasswordField.becomeFirstResponder()
+        }
+        
+        
         return true
     }
+    
+   
     
     
     @objc func keyboardWillShow(_ notification: Notification) {
